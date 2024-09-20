@@ -1,13 +1,10 @@
-import Button from 'react-bootstrap/Button';
 import { DeleteModal, EditModal, AddModal } from './Modals';
 
 const TableRow = ({ student, editAction, deleteAction }) => {
   return (
     <tr>
       <td className=''>
-        <p className=''>
-          {student.name} + {student.id}
-        </p>
+        <p className=''>{student.name}</p>
       </td>
       <td className=''>
         <p className=''>{student.phone}</p>
@@ -40,19 +37,19 @@ const TableBody = ({ list, editAction, deleteAction }) => {
   );
 };
 
-const TableHeaderTitle = ({ title, colSpan }) => {
+const TableHeaderTitle = ({ title, colSpan, sortAction }) => {
   return (
     <th className='' colSpan={colSpan}>
-      <p className=''>{title}</p>
+      <p onClick={sortAction ? sortAction : null}>{title}</p>
     </th>
   );
 };
 
-const TableHeader = () => {
+const TableHeader = ({ sortAction }) => {
   return (
     <thead>
       <tr>
-        <TableHeaderTitle title='name' colSpan={1} />
+        <TableHeaderTitle title='name' colSpan={1} sortAction={sortAction} />
         <TableHeaderTitle title='phone' colSpan={1} />
         <TableHeaderTitle title='email' colSpan={1} />
         <TableHeaderTitle title='action' colSpan={2} />
@@ -61,11 +58,11 @@ const TableHeader = () => {
   );
 };
 
-const Table = ({ list, editAction, deleteAction, addAction }) => {
+const Table = ({ list, editAction, deleteAction, addAction, sortAction }) => {
   return (
     <>
       <table className='table table-light table-striped table-hover'>
-        <TableHeader />
+        <TableHeader sortAction={sortAction} />
         <TableBody
           list={list}
           editAction={editAction}
