@@ -198,13 +198,13 @@ const App = () => {
   };
 
   const onSortHanlder = () => {
-    const sorted = [...students];
+    const sorted = [...filteredList];
     if (!isSorted) {
-      setStudents(
+      setFilteredList(
         sorted.sort((s1, s2) => s1.name.toLowerCase() > s2.name.toLowerCase())
       );
     } else {
-      setStudents(sorted.sort((s1, s2) => s1.id > s2.id));
+      setFilteredList(sorted.sort((s1, s2) => s1.id > s2.id));
     }
     setIsSorted(!isSorted);
   };
