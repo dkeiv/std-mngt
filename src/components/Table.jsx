@@ -1,6 +1,6 @@
-import { DeleteModal, EditModal, AddModal } from './Modals';
+import { RemoveModal, UpdateModal } from './Modals';
 
-const TableRow = ({ student, editAction, deleteAction }) => {
+const TableRow = ({ student, handleOnUpdate, handleOnRemove }) => {
   return (
     <tr>
       <td className=''>
@@ -13,63 +13,85 @@ const TableRow = ({ student, editAction, deleteAction }) => {
         <p className=''>{student.email}</p>
       </td>
       <td>
-        <EditModal student={student} editAction={editAction} />
+        <UpdateModal student={student} handleOnUpdate={handleOnUpdate} />
       </td>
       <td className=''>
-        <DeleteModal deleteAction={deleteAction} student={student} />
+        <RemoveModal handleOnRemove={handleOnRemove} student={student} />
       </td>
     </tr>
   );
 };
 
-const TableBody = ({ list, editAction, deleteAction }) => {
+const TableBody = ({ students, handleOnUpdate, handleOnRemove }) => {
   return (
     <tbody>
-      {list.map(student => (
+      {students.map(student => (
         <TableRow
           key={`std-${student.id}`}
           student={student}
-          editAction={editAction}
-          deleteAction={deleteAction}
+          handleOnUpdate={handleOnUpdate}
+          handleOnRemove={handleOnRemove}
         />
       ))}
     </tbody>
   );
 };
 
-const TableHeaderTitle = ({ title, colSpan, sortAction }) => {
+const TableHeaderTitle = ({ title, colSpan, handleToggleSort }) => {
   return (
     <th className='' colSpan={colSpan}>
-      <p onClick={sortAction ? sortAction : null}>{title}</p>
+      <p onClick={title === 'action' ? null : () => handleToggleSort(title)}>
+        {title}
+      </p>
     </th>
   );
 };
 
-const TableHeader = ({ sortAction }) => {
+const TableHeader = ({ handleToggleSort }) => {
   return (
     <thead>
       <tr>
-        <TableHeaderTitle title='name' colSpan={1} sortAction={sortAction} />
-        <TableHeaderTitle title='phone' colSpan={1} />
-        <TableHeaderTitle title='email' colSpan={1} />
-        <TableHeaderTitle title='action' colSpan={2} />
+        <TableHeaderTitle
+          title='name'
+          colSpan={1}
+          handleToggleSort={handleToggleSort}
+        />
+        <TableHeaderTitle
+          title='phone'
+          colSpan={1}
+          handleToggleSort={handleToggleSort}
+        />
+        <TableHeaderTitle
+          title='email'
+          colSpan={1}
+          handleToggleSort={handleToggleSort}
+        />
+        <TableHeaderTitle
+          title='action'
+          colSpan={2}
+          handleToggleSort={handleToggleSort}
+        />
       </tr>
     </thead>
   );
 };
 
-const Table = ({ list, editAction, deleteAction, addAction, sortAction }) => {
+const Table = ({
+  students,
+  handleOnUpdate,
+  handleOnRemove,
+  handleToggleSort,
+}) => {
   return (
     <>
       <table className='table table-light table-striped table-hover'>
-        <TableHeader sortAction={sortAction} />
+        <TableHeader handleToggleSort={handleToggleSort} />
         <TableBody
-          list={list}
-          editAction={editAction}
-          deleteAction={deleteAction}
+          students={students}
+          handleOnUpdate={handleOnUpdate}
+          handleOnRemove={handleOnRemove}
         />
       </table>
-      <AddModal addAction={addAction} />
     </>
   );
 };
