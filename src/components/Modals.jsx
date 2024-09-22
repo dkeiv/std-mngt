@@ -21,7 +21,7 @@ export const RemoveModal = ({ handleOnRemove, student }) => {
   };
 
   const onClickRemove = () => {
-    studentService.remove(student.id).then(res => handleOnRemove(res.data.id));
+    studentService.remove(student.id).then(() => handleOnRemove(student.id));
     onClickClose();
   };
 
