@@ -15,15 +15,8 @@ const App = () => {
     phone: '',
     email: '',
   });
-
-  const [paging, setPaging] = useState({
-    totalItems: '',
-    itemsPerPage: 5,
-    totalPages: '',
-    currentPage: 1,
-    prev: null,
-    next: null,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     studentService.getAll().then(res => {
@@ -31,50 +24,6 @@ const App = () => {
       setIsLoaded(true);
     });
   }, []);
-
-  useEffect(() => {
-    const curTotalPages = Math.ceil(students.length / paging.itemsPerPage);
-    setPaging(prev => ({
-      ...prev,
-      totalItems: students.length,
-      totalPages: curTotalPages,
-      prev: prev.currentPage <= 1 ? null : prev.currentPage - 1,
-      next: prev.currentPage >= curTotalPages ? null : prev.currentPage + 1,
-    }));
-  }, [students]);
-
-  const toPage = page => {
-    if (page >= 0 && page <= paging.totalPages) {
-      setPaging(prev => ({
-        ...prev,
-        currentPage: page,
-        prev: page - 1,
-        next: page + 1,
-      }));
-    }
-  };
-
-  const toPrevPage = () => {
-    if (paging.prev) {
-      setPaging(prev => ({
-        ...prev,
-        currentPage: prev.prev,
-        prev: prev.prev <= 1 ? null : prev.prev - 1,
-        next: prev.next - 1,
-      }));
-    }
-  };
-
-  const toNextPage = () => {
-    if (paging.next) {
-      setPaging(prev => ({
-        ...prev,
-        currentPage: prev.next,
-        next: prev.next >= prev.totalPages ? null : prev.next + 1,
-        prev: prev.prev + 1,
-      }));
-    }
-  };
 
   const handleOnCreate = newStudent => {
     setStudents(students.concat(newStudent));
@@ -98,13 +47,14 @@ const App = () => {
     );
   };
 
+  const handlePageChange = page => {
+    setCurrentPage(page);
+  };
+
   const filteredList = students
     ? students
         .filter(byQuery(query))
-        .slice(
-          (paging.currentPage - 1) * paging.itemsPerPage,
-          paging.currentPage * paging.itemsPerPage
-        )
+        .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
     : students;
 
   const onQueryChange = e => {
@@ -138,10 +88,9 @@ const App = () => {
       )}
       <CreateModal handleOnCreate={handleOnCreate} />
       <BasicPagination
-        paging={paging}
-        toPrevPage={toPrevPage}
-        toPage={toPage}
-        toNextPage={toNextPage}
+        students={students}
+        itemsPerPage={itemsPerPage}
+        handlePageChange={handlePageChange}
       />
     </div>
   );
