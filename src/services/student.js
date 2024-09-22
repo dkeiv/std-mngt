@@ -9,18 +9,18 @@ const getPage = page => {
   return axios.get(`${RESOURCE_URL}?_page=${page}&_per_page=5`);
 };
 
-const buildQuery = query => {
-  let result = '';
+const buildQuery = conditions => {
+  let query = '';
 
-  for (const field in query) {
-    result += `${field}_like=${query[field]}&`;
+  for (const c in conditions) {
+    query += `${c}_like=${conditions[c]}&`;
   }
-  return result;
+  return query;
 };
 
-const search = query => {
-  const q = buildQuery(query);
-  return axios.get(`${RESOURCE_URL}?${q}`);
+const search = conditions => {
+  const query = buildQuery(conditions);
+  return axios.get(`${RESOURCE_URL}?${query}`);
 };
 
 const sortBy = (field, isASC) => {
